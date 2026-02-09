@@ -1,10 +1,11 @@
 package com.project.show_flix.controller;
 
-import com.project.show_flix.entity.User;
+import com.project.show_flix.dto.CreateUserRequest;
+import com.project.show_flix.dto.UserResponse;
 import com.project.show_flix.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,23 +18,23 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    public List<User> getAllUsers() {
+    @GetMapping
+    public List<UserResponse> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
+    public UserResponse getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
-    @PostMapping("/")
-    public User createUser(@RequestBody User user) {
+    @PostMapping
+    public UserResponse createUser(@Valid @RequestBody CreateUserRequest user) {
         return userService.createUser(user);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+    public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody CreateUserRequest user) {
         return userService.updateUser(id, user);
     }
 
