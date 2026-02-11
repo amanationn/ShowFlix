@@ -3,6 +3,7 @@ package com.project.show_flix.service;
 import com.project.show_flix.dto.CreateUserRequest;
 import com.project.show_flix.dto.UserResponse;
 import com.project.show_flix.entity.User;
+import com.project.show_flix.exception.ResourceNotFoundException;
 import com.project.show_flix.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         return mapToResponse(user);
     }
 
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse updateUser(Long id, CreateUserRequest request) {
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         existingUser.setUsername(request.getUsername());
         existingUser.setEmail(request.getEmail());
         existingUser.setPassword(request.getPassword());
