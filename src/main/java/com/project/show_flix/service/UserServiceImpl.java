@@ -5,6 +5,7 @@ import com.project.show_flix.dto.UserResponse;
 import com.project.show_flix.entity.User;
 import com.project.show_flix.exception.ResourceNotFoundException;
 import com.project.show_flix.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +15,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -37,7 +41,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         return mapToResponse(userRepository.save(user));
     }
 
@@ -47,7 +51,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         existingUser.setUsername(request.getUsername());
         existingUser.setEmail(request.getEmail());
-        existingUser.setPassword(request.getPassword());
+        existingUser.setPassword(passwordEncoder.encode(request.getPassword()));
         return mapToResponse(userRepository.save(existingUser));
     }
 
